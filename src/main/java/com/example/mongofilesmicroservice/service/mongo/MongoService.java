@@ -3,12 +3,13 @@ package com.example.mongofilesmicroservice.service.mongo;
 import com.example.mongofilesmicroservice.dto.FileData;
 import com.example.mongofilesmicroservice.parsing.FileLink;
 import com.example.mongofilesmicroservice.service.kafka.KafkaService;
-import com.example.mongofilesmicroservice.service.mongo.sequence.ActionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class MongoService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MongoService.class);

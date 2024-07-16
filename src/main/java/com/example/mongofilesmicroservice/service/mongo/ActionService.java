@@ -1,11 +1,10 @@
-package com.example.mongofilesmicroservice.service.mongo.sequence;
+package com.example.mongofilesmicroservice.service.mongo;
 
 import com.example.mongofilesmicroservice.dto.FileData;
 import com.example.mongofilesmicroservice.dto.SharedUser;
 import com.example.mongofilesmicroservice.dto.User;
 import com.example.mongofilesmicroservice.format.GetFormat;
 import com.example.mongofilesmicroservice.parsing.FileLink;
-import com.example.mongofilesmicroservice.service.mongo.MongoService;
 import com.example.mongofilesmicroservice.service.kafka.KafkaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

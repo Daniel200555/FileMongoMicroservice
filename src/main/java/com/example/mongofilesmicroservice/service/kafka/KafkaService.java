@@ -3,7 +3,7 @@ package com.example.mongofilesmicroservice.service.kafka;
 import com.example.mongofilesmicroservice.dto.FileData;
 import com.example.mongofilesmicroservice.dto.User;
 import com.example.mongofilesmicroservice.repository.MongoRepository;
-import com.example.mongofilesmicroservice.service.mongo.SequenceGeneratorService;
+import com.example.mongofilesmicroservice.service.mongo.sequence.SequenceGeneratorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

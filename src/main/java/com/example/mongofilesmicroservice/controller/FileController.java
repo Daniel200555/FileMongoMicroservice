@@ -4,7 +4,7 @@ import com.example.mongofilesmicroservice.dto.User;
 import com.example.mongofilesmicroservice.repository.MongoRepository;
 import com.example.mongofilesmicroservice.service.mongo.MongoService;
 import com.example.mongofilesmicroservice.service.kafka.KafkaService;
-import com.example.mongofilesmicroservice.service.mongo.SequenceGeneratorService;
+import com.example.mongofilesmicroservice.service.mongo.sequence.SequenceGeneratorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +31,9 @@ public class FileController {
     @Autowired
     private SequenceGeneratorService sequenceGeneratorService;
 
+    @Autowired
+    private MongoService mongoService;
+
     public FileController() {
 
     }
@@ -53,8 +56,8 @@ public class FileController {
         LOGGER.info(String.format("Request add file to user with nickname -> %s", nickname));
         User usertemp = mongoRepository.findByNickname(nickname);
         List<FileData> files = usertemp.getFiles();
-        List<FileData> filesToUpload = MongoService.action(usertemp.getFiles(), dir).filesToUpload(file, dir, nickname);
-        files = MongoService.action(usertemp.getFiles(), dir, this.kafkaService).addFiles(filesToUpload);
+        List<FileData> filesToUpload = mongoService.action(usertemp.getFiles(), dir).filesToUpload(file, dir, nickname);
+        files = mongoService.action(usertemp.getFiles(), dir, this.kafkaService).addFiles(filesToUpload);
         usertemp.setFiles(files);
         int i = 0;
         for (FileData fileData: filesToUpload) {
@@ -72,7 +75,7 @@ public class FileController {
     @PostMapping("/add/folder")
     public List<FileData> addFolder(@RequestParam("nickname") String nickname, @RequestParam("dir") String dir, @RequestParam("name") String name) {
         User usertemp = mongoRepository.findByNickname(nickname);
-        List<FileData> files = MongoService.action(usertemp.getFiles(), dir, kafkaService).add(name, dir, nickname);
+        List<FileData> files = mongoService.action(usertemp.getFiles(), dir, kafkaService).add(name, dir, nickname);
         usertemp.setFiles(files);
         return mongoRepository.save(usertemp).getFiles();
     }
@@ -87,7 +90,7 @@ public class FileController {
     public void deleteFile(@RequestParam("nickname") String nickname, @RequestParam("dir") String dir) {
         LOGGER.info(String.format("Request delete file from user with nickname -> %s", nickname));
         User user = mongoRepository.findByNickname(nickname);
-        List<FileData> files = MongoService.action(user.getFiles(), dir).remove();
+        List<FileData> files = mongoService.action(user.getFiles(), dir).remove();
         user.setFiles(files);
         kafkaService.deleteFile(dir);
         mongoRepository.save(user);
@@ -96,7 +99,7 @@ public class FileController {
     @PostMapping("/rename")
     public User renameFile(@RequestParam("nickname") String nickname, @RequestParam("dir") String dir, @RequestParam("name") String name) {
         User user = mongoRepository.findByNickname(nickname);
-        List<FileData> files = MongoService.action(user.getFiles(), dir).rename(name);
+        List<FileData> files = mongoService.action(user.getFiles(), dir).rename(name);
         user.setFiles(files);
         return mongoRepository.save(user);
     }
@@ -105,26 +108,26 @@ public class FileController {
     public List<FileData> showFiles(@RequestParam("nickname") String nickname, @RequestParam("dir") String dir) {
         LOGGER.info(String.format("Request to show files from user with nickname -> %s", nickname));
         User user = mongoRepository.findByNickname(nickname);
-        return MongoService.action(user.getFiles(), dir).showFile();
+        return mongoService.action(user.getFiles(), dir).showFile();
     }
 
     @GetMapping("/find")
     public List<FileData> findFiles(@RequestParam("nickname") String nickname, @RequestParam("name") String name) {
         LOGGER.info(String.format("Request to find files from user with nickname -> %s", nickname));
         User user = mongoRepository.findByNickname(nickname);
-        return MongoService.action().findFile(user.getFiles(), name);
+        return mongoService.action().findFile(user.getFiles(), name);
     }
 
     @GetMapping("/star")
     public List<FileData> starFile(@RequestParam("nickname") String nickname, @RequestParam("dir") String dir) {
         User user = mongoRepository.findByNickname(nickname);
-        return MongoService.action(user.getFiles(), dir).star();
+        return mongoService.action(user.getFiles(), dir).star();
     }
 
     @GetMapping("/unstar")
     public List<FileData> unStarFile(@RequestParam("nickname") String nickname, @RequestParam("dir") String dir) {
         User user = mongoRepository.findByNickname(nickname);
-        return MongoService.action(user.getFiles(), dir).unStar();
+        return mongoService.action(user.getFiles(), dir).unStar();
     }
 
 }

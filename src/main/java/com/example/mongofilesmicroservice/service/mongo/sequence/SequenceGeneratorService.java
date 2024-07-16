@@ -1,4 +1,4 @@
-package com.example.mongofilesmicroservice.service.mongo;
+package com.example.mongofilesmicroservice.service.mongo.sequence;
 
 import com.example.mongofilesmicroservice.dto.DatabaseSequence;
 import org.springframework.beans.factory.annotation.Autowired;
